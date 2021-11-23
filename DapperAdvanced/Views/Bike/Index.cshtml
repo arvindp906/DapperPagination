@@ -1,0 +1,172 @@
+﻿
+@model DapperAdvanced.Models.PagedList<DapperAdvanced.Models.Bike>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Bikes</h2>
+
+<div class="row pb-3">
+    <div class="col-md-6">
+        <form method="get" action="@Url.Action("Index")">
+            <input name="Search" type="search" placeholder="Search" value="@ViewBag.Request.Search" />
+            <button class="btn btn-primary">Search</button>
+        </form>
+    </div>
+
+
+    <div class="col-md-6 text-end">
+        @Html.ActionLink("Create New", "Create", null,
+        new { @class = "btn btn-primary" })
+        <button class="btn btn-primary" type="submit" value="print" onclick="window.print()">Print</button>
+        <a href="@Url.Action("Index","Bike",
+                new DapperAdvanced.Models.RequestModel
+                {
+                    Search=ViewBag.request.Search,
+                OrderBy=ViewBag.request.OrderBy,
+                IsDescending= ViewBag.request.IsDescending,
+                PageSize= 5
+                })" class="=btn btn-primary">Export to Excel</a>
+        @*@Html.ActionLink("ExportToExcel", "ExportToExcel", null,
+        new { @class = "btn btn-primary" })*@
+        <button class="btn btn-primary" onclick="openFullscreen()" id="toggle-fullscreen">Open Fullscreen</button>
+
+        @Html.ActionLink("Refresh", "Index", null,
+        new { @class = "btn btn-primary" })
+
+    </div>
+
+</div>
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Name", "Index"
+                 , new DapperAdvanced.Models.RequestModel
+                 {
+                     Search = ViewBag.Request.Search,
+                     OrderBy = "name",
+                     IsDescending = (ViewBag.Request.OrderBy == "name"
+                                     &&
+                                     ViewBag.Request.IsDescending == false) ? true : false
+                 }, null)
+        </th>
+        <th>
+            @Html.ActionLink("Type", "Index"
+                 , new DapperAdvanced.Models.RequestModel
+                 {
+                     Search = ViewBag.Request.Search,
+                     OrderBy = "type",
+                     IsDescending = (ViewBag.Request.OrderBy == "type"
+                                     &&
+                                     ViewBag.Request.IsDescending == false) ? true : false
+                 }, null)
+        </th>
+        <th>
+            @Html.ActionLink("Price", "Index"
+                  , new DapperAdvanced.Models.RequestModel
+                  {
+                      Search = ViewBag.Request.Search,
+                      OrderBy = "Price",
+                      IsDescending = (ViewBag.Request.OrderBy == "price"
+                                      &&
+                                      ViewBag.Request.IsDescending == false) ? true : false
+                  }, null)
+        </th>
+        <th>
+            @Html.ActionLink("Company", "Index"
+                 , new DapperAdvanced.Models.RequestModel
+                 {
+                     Search = ViewBag.Request.Search,
+                     OrderBy = "Company",
+                     IsDescending = (ViewBag.Request.OrderBy == "Company"
+                                     &&
+                                     ViewBag.Request.IsDescending == false) ? true : false
+                 }, null)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Items)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Company)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<div class="pagination" style="margin-left: 400px">
+
+    <a href = "@Url.Action("Index", "Bike", new DapperAdvanced.Models.RequestModel
+{
+    Search = ViewBag.request.Search,
+    OrderBy = ViewBag.Request.OrderBy,
+    IsDescending = ViewBag.request.IsDescending,
+    PageNumber = 1
+})" class="btn btn-primary"></a>
+</div>
+<div class=" col text-end ">
+    Page Size:
+    <a href="@Url.Action("Index","Bike",
+            new DapperAdvanced.Models.RequestModel
+            {
+                Search=ViewBag.request.Search,
+                OrderBy=ViewBag.request.OrderBy,
+
+                IsDescending= ViewBag.request.IsDescending,
+                PageSize= 5,
+            })" class="btn btn-primary">5</a>
+    <a href="@Url.Action("Index","Bike",
+            new DapperAdvanced.Models.RequestModel
+            {
+                Search=ViewBag.request.Search,
+                OrderBy=ViewBag.request.OrderBy,
+
+                IsDescending= ViewBag.request.IsDescending,
+                PageSize= 10,
+            })" class="btn btn-primary">10</a>
+
+</div>
+
+
+
+
+
+
+<script>
+
+    var elem = document.documentElement;
+    function openFullscreen() {
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) {
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+            elem.msRequestFullscreen();
+        }
+    }
+</script>
+
+
+
+
+
