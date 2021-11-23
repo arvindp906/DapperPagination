@@ -38,13 +38,23 @@ as begin
 end
 go
 
-create proc [dbo].[Bikes_GetAll]
-	@Id int = null,
+
+create procedure [dbo].[Bikes_GetsPage]
+@Id int = null,
 	@Search nvarchar(50) = null,
 	@OrderBy varchar(100) = 'name',
-	@IsDescending bit = 0
+	@IsDescending bit = 0,
+	@PageNumber int = 1,
+	@PageSize int = 5
+	
 as begin
-	select 
+
+select
+ count(1) TotalRecords
+  from Bikes 
+
+select
+
 		Id,
 		Name,
 		Type,
@@ -52,6 +62,8 @@ as begin
 		Company
 	from 
 		Bikes
+
+
 	where
 		Id = coalesce(@Id, Id)
 		and
@@ -82,8 +94,12 @@ order by
 		, case when @OrderBy = 'company' and @IsDescending = 0 then Company end asc
 		, case when @OrderBy = 'company' and @IsDescending = 1 then Company end desc
 		
+		OFFSET ((@PageNumber - 1) * @PageSize) ROWS
+		FETCH NEXT @PageSize ROWS ONLY
+		OPTION (RECOMPILE)
 end
-go
+GO
+
 
 create proc [dbo].[Bikes_Get]
 	@Id int
